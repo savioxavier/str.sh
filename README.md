@@ -1,7 +1,7 @@
 # str.sh
 
-> **Note**
-> This project is still in development with more features to come
+> [!WARNING]
+> **This project is still in development with more features to come**
 
 ### Why?
 
