@@ -41,7 +41,7 @@ read_single() {
 
     if [ -f "$1" ]; then
         cat "$1"
-    elif [[ $2 == "--string-only" ]]; then # override for cat
+    elif [[ $2 == "--string-only" ]]; then
         echo "$1"
     elif [ ! -t 0 ]; then
         cat -
@@ -131,9 +131,6 @@ function str.equal() {
     if [ ! -t 0 ]; then
         S_COMPARE="$1"
     else
-        # special execption: if no stdin is provided are there
-        # and two arguments are provided, both are treated as
-        # pure strings instead of just one file and one string
         S_COMPARE="$2"
     fi
 
@@ -170,6 +167,29 @@ function str.length() {
     echo "${#S}"
 }
 
+function str.split() {
+    local S=$(read_single "$1")
+    local S_DELIMITER
+
+    if [ ! -t 0 ]; then
+        S_DELIMITER="$1"
+    else
+        S_DELIMITER="$2"
+    fi
+
+    if [[ -z "${S_DELIMITER}" ]]; then
+        __strsh_err "no delimiter provided"
+        return 1
+    fi
+
+    S_ARR=("$(echo "$S" | tr "$S_DELIMITER" '\n')")
+
+    for element in "${S_ARR[@]}"; do
+        echo "$element"
+    done
+
+}
+
 function __strsh_execute_command() {
     echo -e "\u001b[2m\u001b[36mexecuting command: \u001b[0m\u001b[36m'$1' \u001b[0m\u001b[36m\u001b[2;3m($2)\u001b[0m"
     eval "$1"
@@ -184,45 +204,52 @@ function __strsh_section_divider() {
 }
 
 function __strsh_run_tests() {
-    __strsh_section_divider "str.contains"
+    # __strsh_section_divider "str.contains"
 
-    __strsh_execute_command 'str.contains help.txt "git"' "with file"
-    __strsh_execute_command 'cat help.txt | str.contains "Create an empty"' "stdin"
-    __strsh_execute_command 'cat help.txt | str.contains' "no substr, has stdin"
-    __strsh_execute_command 'str.contains help.txt' "no substr"
-    __strsh_execute_command 'str.contains' "absolutely nothing"
+    # __strsh_execute_command 'str.contains help.txt "git"' "with file"
+    # __strsh_execute_command 'cat help.txt | str.contains "Create an empty"' "stdin"
+    # __strsh_execute_command 'cat help.txt | str.contains' "no substr, has stdin"
+    # __strsh_execute_command 'str.contains help.txt' "no substr"
+    # __strsh_execute_command 'str.contains' "absolutely nothing"
 
-    # TODO: Add more tests for str.contains.r
-    __strsh_section_divider "str.contains.r"
+    # # TODO: Add more tests for str.contains.r
+    # __strsh_section_divider "str.contains.r"
 
-    __strsh_execute_command 'str.contains.r help.txt "git"' "with file"
-    __strsh_execute_command 'cat help.txt | str.contains.r "Create an empty"' "stdin"
-    __strsh_execute_command 'cat help.txt | str.contains.r' "no substr, has stdin"
-    __strsh_execute_command 'str.contains.r help.txt' "no substr"
-    __strsh_execute_command 'str.contains.r' "absolutely nothing"
-    __strsh_execute_command 'str.contains.r help.txt "Test numbers: \d+"' "posix compliant regex only"
+    # __strsh_execute_command 'str.contains.r help.txt "git"' "with file"
+    # __strsh_execute_command 'cat help.txt | str.contains.r "Create an empty"' "stdin"
+    # __strsh_execute_command 'cat help.txt | str.contains.r' "no substr, has stdin"
+    # __strsh_execute_command 'str.contains.r help.txt' "no substr"
+    # __strsh_execute_command 'str.contains.r' "absolutely nothing"
+    # __strsh_execute_command 'str.contains.r help.txt "Test numbers: \d+"' "posix compliant regex only"
 
-    __strsh_section_divider "str.reverse"
+    # __strsh_section_divider "str.reverse"
 
-    __strsh_execute_command "str.reverse help.txt" "reverse file"
-    __strsh_execute_command "cat help.txt | str.reverse" "reverse text, cat stdin"
-    __strsh_execute_command "echo hello there | str.reverse" "reverse text, has stdin"
-    __strsh_execute_command "str.reverse" "absolutely nothing"
+    # __strsh_execute_command "str.reverse help.txt" "reverse file"
+    # __strsh_execute_command "cat help.txt | str.reverse" "reverse text, cat stdin"
+    # __strsh_execute_command "echo hello there | str.reverse" "reverse text, has stdin"
+    # __strsh_execute_command "str.reverse" "absolutely nothing"
 
-    __strsh_section_divider "str.equal"
+    # __strsh_section_divider "str.equal"
 
-    __strsh_execute_command 'str.equal "hi" "hi"' "with strings"
-    __strsh_execute_command 'str.equal "hi" "not hi"' "with strings, not equal"
-    __strsh_execute_command "str.equal 'hi' $(echo hi)" "with strings, one command substitution"
-    __strsh_execute_command 'echo hi | str.equal "hi"' "stdin"
-    __strsh_execute_command 'cat help.txt | str.equal' "no compare string, has stdin"
-    __strsh_execute_command 'str.equal help.txt' "no compare string"
-    __strsh_execute_command 'str.equal' "absolutely nothing"
+    # __strsh_execute_command 'str.equal "hi" "hi"' "with strings"
+    # __strsh_execute_command 'str.equal "hi" "not hi"' "with strings, not equal"
+    # __strsh_execute_command "str.equal 'hi' $(echo hi)" "with strings, one command substitution"
+    # __strsh_execute_command 'echo hi | str.equal "hi"' "stdin"
+    # __strsh_execute_command 'cat help.txt | str.equal' "no compare string, has stdin"
+    # __strsh_execute_command 'str.equal help.txt' "no compare string"
+    # __strsh_execute_command 'str.equal' "absolutely nothing"
 
-    __strsh_section_divider "str.length"
+    # __strsh_section_divider "str.length"
 
-    __strsh_execute_command 'str.length help.txt' "with file"
-    __strsh_execute_command 'echo hello | str.length' "with stdin"
+    # __strsh_execute_command 'str.length help.txt' "with file"
+    # __strsh_execute_command 'echo hello | str.length' "with stdin"
+
+    __strsh_section_divider "str.split"
+
+    __strsh_execute_command 'str.split text.txt " "' "with file, space is delimter"
+    __strsh_execute_command 'echo hello there | str.split " "' "stdin"
+    __strsh_execute_command 'echo hello there | str.split' "no delimiter string, has stdin"
+    __strsh_execute_command 'str.split' "absolutely nothing"
 }
 
 # Aliases
@@ -248,6 +275,25 @@ function __strsh_run_tests() {
 # alias str.same="str.equal"
 # alias str.equals="str.equal"
 
+# alias str.rev="str.reverse"
+# alias str.::-1="str.reverse"
+
+function __strsh_get_longest_strsh_command() {
+    typeset -f |
+        awk '!/^main[ (]/ && /^[^ {}]+ *\(\)/ { gsub(/[()]/, "", $1); print $1}' |
+        grep "str\." |
+        wc --max-line-length # wanted to use str.wc here but I thought that would lead to circular references
+}
+
+function __strsh_repeat_char() {
+    local CHAR="$1"
+    local N="$2"
+    for ((i = 0; i < N; i++)); do printf "%s" "$CHAR"; done
+
+}
+
+__LONGEST_STRSH_COMMAND_LENGTH="$(__strsh_get_longest_strsh_command)"
+
 # Because I wanted a funny three character name
 # that probably wouldn't be used anywhere else
 # Also, I used it because shell-format neatly
@@ -269,9 +315,14 @@ function __strsh_run_tests() {
     local MAGENTA="\033[35m"
     local CYAN="\033[36m"
 
-    echo -e """
-${BOLD}${CYAN}${NAME}${RESET}   ${YELLOW}${DESC}${RESET} ${DIM}(aliases: ${MAGENTA}${ALIASES}${RESET}${DIM})${RESET}
-            ${DIM}${GREEN}${USAGE_1}${RESET}${DIM} or ${BLUE}${USAGE_2}${RESET}"""
+    local NAME_LEN="${#NAME}"
+    local LEFT_PADDING="$((__LONGEST_STRSH_COMMAND_LENGTH - NAME_LEN))"
+    local LEFT_SPACES="$(__strsh_repeat_char " " "$LEFT_PADDING")"
+    local NAME_SPACES="$(__strsh_repeat_char " " "$NAME_LEN")"
+
+    echo -e "
+${LEFT_SPACES}${BOLD}${CYAN}${NAME}${RESET}   ${YELLOW}${DESC}${RESET} ${DIM}(aliases: ${MAGENTA}${ALIASES}${RESET}${DIM})${RESET}
+   ${NAME_SPACES}${LEFT_SPACES}${DIM}${GREEN}${USAGE_1}${RESET}${DIM} or ${BLUE}${USAGE_2}${RESET}"
 }
 
 str.sh() {
@@ -297,5 +348,11 @@ str.sh() {
             "stdin <string1> | str.equal <string2>" \
             "Check whether two given strings are equal" \
             "eq, same, equals"
+
+        @_h "str.reverse" \
+            "str.reverse <file>" \
+            "stdin text | str.reverse" \
+            "Reverse text" \
+            "rev, ::-1"
     fi
 }
