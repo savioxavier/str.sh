@@ -34,16 +34,16 @@ function read_multi() {
 }
 
 function read_single() {
-    if [ $# -eq 0 ]; then
+    if [[ $# -eq 0 ]]; then
         __strsh_err "Error: No arguments for read_single provided."
         return 1
     fi
 
-    if [ -f "$1" ]; then
+    if [[ -f "$1" ]]; then
         cat "$1"
     elif [[ $2 == "--string-only" ]]; then
         echo "$1"
-    elif [ ! -t 0 ]; then
+    elif [[ ! -t 0 ]]; then
         cat -
     else
         __strsh_err "no valid input source (neither a file nor stdin) provided."
@@ -65,7 +65,7 @@ function str.contains() {
     local S=$(read_single "$1")
     local S_SUBSTRING
 
-    if [ ! -t 0 ]; then
+    if [[ ! -t 0 ]]; then
         S_SUBSTRING="$1"
     else
         S_SUBSTRING="$2"
@@ -87,7 +87,7 @@ function str.contains.r() {
     local S=$(read_single "$1")
     local S_SUBSTRING
 
-    if [ ! -t 0 ]; then
+    if [[ ! -t 0 ]]; then
         S_SUBSTRING="$1"
     else
         S_SUBSTRING="$2"
@@ -128,7 +128,7 @@ function str.equal() {
     local S_COMPARE
 
     # is stdin present?
-    if [ ! -t 0 ]; then
+    if [[ ! -t 0 ]]; then
         S_COMPARE="$1"
     else
         S_COMPARE="$2"
@@ -171,7 +171,7 @@ function str.split() {
     local S=$(read_single "$1")
     local S_DELIMITER
 
-    if [ ! -t 0 ]; then
+    if [[ ! -t 0 ]]; then
         S_DELIMITER="$1"
     else
         S_DELIMITER="$2"
