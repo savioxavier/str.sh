@@ -33,7 +33,7 @@ function read_multi() {
     fi
 }
 
-read_single() {
+function read_single() {
     if [ $# -eq 0 ]; then
         __strsh_err "Error: No arguments for read_single provided."
         return 1
@@ -298,7 +298,7 @@ __LONGEST_STRSH_COMMAND_LENGTH="$(__strsh_get_longest_strsh_command)"
 # that probably wouldn't be used anywhere else
 # Also, I used it because shell-format neatly
 # formats three character function names in one line
-@_h() {
+function @_h() {
     local NAME="$1"
     local USAGE_1="$2" # Usually file based
     local USAGE_2="$3" # Usually stdin based
@@ -325,7 +325,7 @@ ${LEFT_SPACES}${BOLD}${CYAN}${NAME}${RESET}   ${YELLOW}${DESC}${RESET} ${DIM}(al
    ${NAME_SPACES}${LEFT_SPACES}${DIM}${GREEN}${USAGE_1}${RESET}${DIM} or ${BLUE}${USAGE_2}${RESET}"
 }
 
-str.sh() {
+function str.sh() {
     # Main command utility
 
     # TODO: Add help notes for every command
