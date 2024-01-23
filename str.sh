@@ -118,6 +118,42 @@ function str.contains.r() {
     fi
 }
 
+function str.count() {
+    local S=$(read_single "$1")
+    local S_SUBSTRING
+
+    if [[ ! -t 0 ]]; then
+        S_SUBSTRING="$1"
+    else
+        S_SUBSTRING="$2"
+    fi
+
+    if [[ -z "${S_SUBSTRING}" ]]; then
+        __strsh_err "empty substring"
+        return 1
+    fi
+
+    echo "$S" | grep -Eo "$S_SUBSTRING" | sort | uniq -c | awk '{print""$1}'
+}
+
+function str.countall() {
+    local S=$(read_single "$1")
+    local S_PIPE_SEP_SUBSTRINGS
+
+    if [[ ! -t 0 ]]; then
+        S_PIPE_SEP_SUBSTRINGS="$1"
+    else
+        S_PIPE_SEP_SUBSTRINGS="$2"
+    fi
+
+    if [[ -z "${S_PIPE_SEP_SUBSTRINGS}" ]]; then
+        __strsh_err "empty substring"
+        return 1
+    fi
+
+    echo "$S" | grep -Eo "$S_PIPE_SEP_SUBSTRINGS" | sort | uniq -c | awk '{print $2": "$1}'
+}
+
 function str.reverse() {
     S=$(read_single "$1")
     echo -e "${S}" | rev
@@ -244,12 +280,26 @@ function __strsh_run_tests() {
     # __strsh_execute_command 'str.length help.txt' "with file"
     # __strsh_execute_command 'echo hello | str.length' "with stdin"
 
-    __strsh_section_divider "str.split"
+    # __strsh_section_divider "str.split"
 
-    __strsh_execute_command 'str.split text.txt " "' "with file, space is delimter"
-    __strsh_execute_command 'echo hello there | str.split " "' "stdin"
-    __strsh_execute_command 'echo hello there | str.split' "no delimiter string, has stdin"
-    __strsh_execute_command 'str.split' "absolutely nothing"
+    # __strsh_execute_command 'str.split text.txt " "' "with file, space is delimter"
+    # __strsh_execute_command 'echo hello there | str.split " "' "stdin"
+    # __strsh_execute_command 'echo hello there | str.split' "no delimiter string, has stdin"
+    # __strsh_execute_command 'str.split' "absolutely nothing"
+
+    __strsh_section_divider "str.count"
+
+    __strsh_execute_command 'str.count help.txt "git"' "with file, word=is"
+    __strsh_execute_command 'echo -e "one two three tree one\ntwo one one zero" | str.count "one"' "stdin, multiline"
+    __strsh_execute_command 'echo hello there | str.count' "no substring, has stdin"
+    __strsh_execute_command 'str.count' "absolutely nothing"
+
+    __strsh_section_divider "str.countall"
+
+    __strsh_execute_command 'str.countall help.txt "git"' "with file, word=is"
+    __strsh_execute_command 'echo -e "one two three tree one\ntwo one one zero" | str.countall "one|two|three"' "stdin, multiline"
+    __strsh_execute_command 'echo hello there | str.countall' "no substring, has stdin"
+    __strsh_execute_command 'str.countall' "absolutely nothing"
 }
 
 # Aliases
