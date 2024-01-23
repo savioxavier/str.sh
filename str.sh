@@ -136,7 +136,7 @@ function str.count() {
     echo "$S" | grep -Eo "$S_SUBSTRING" | sort | uniq -c | awk '{print""$1}'
 }
 
-function str.countall() {
+function str.countset() {
     local S=$(read_single "$1")
     local S_PIPE_SEP_SUBSTRINGS
 
@@ -294,12 +294,12 @@ function __strsh_run_tests() {
     __strsh_execute_command 'echo hello there | str.count' "no substring, has stdin"
     __strsh_execute_command 'str.count' "absolutely nothing"
 
-    __strsh_section_divider "str.countall"
+    __strsh_section_divider "str.countset"
 
-    __strsh_execute_command 'str.countall help.txt "git"' "with file, word=is"
-    __strsh_execute_command 'echo -e "one two three tree one\ntwo one one zero" | str.countall "one|two|three"' "stdin, multiline"
-    __strsh_execute_command 'echo hello there | str.countall' "no substring, has stdin"
-    __strsh_execute_command 'str.countall' "absolutely nothing"
+    __strsh_execute_command 'str.countset help.txt "git"' "with file, word=is"
+    __strsh_execute_command 'echo -e "one two three tree one\ntwo one one zero" | str.countset "one|two|three"' "stdin, multiline"
+    __strsh_execute_command 'echo hello there | str.countset' "no substring, has stdin"
+    __strsh_execute_command 'str.countset' "absolutely nothing"
 }
 
 # Aliases
